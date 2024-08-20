@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"errors"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -52,13 +54,23 @@ func MetricsMiddlewareWithConfig(config *MetricsConfig) echo.MiddlewareFunc {
 			if config.Skipper(ctx) {
 				return next(ctx)
 			}
+
+			err := next(ctx)
+
 			method := ctx.Request().Method
 			path := MatchedRoute(ctx)
-			err := next(ctx)
-			status := mapStatus(ctx.Response().Status)
-			defer func() {
-				config.Metrics.HttpStatusHistogram.WithLabelValues(status, method, path).Observe(time.Since(start).Seconds())
-			}()
+			status := ctx.Response().Status
+
+			// ctx.Response().Status might not be set yet for errors
+			httpErr := new(echo.HTTPError)
+			if errors.As(err, &httpErr) {
+				status = httpErr.Code
+			}
+			statusStr := strconv.Itoa(status)
+
+			config.Metrics.HTTPRequestDuration.WithLabelValues(statusStr, method, path).Observe(time.Since(start).Seconds())
+			config.Metrics.HTTPRequestsTotal.WithLabelValues(statusStr, method, path).Inc()
+
 			return err
 		}
 	}
