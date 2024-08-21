@@ -33,6 +33,7 @@ endif
 .PHONY: prometheus-up
 prometheus-up: ## Start prometheus service (local access at http://localhost:9090)
 	$(CONTAINER_ENGINE) volume inspect prometheus &> /dev/null || $(CONTAINER_ENGINE) volume create prometheus
+	$(CONTAINER_ENGINE) network inspect idmsvc_backend || $(CONTAINER_ENGINE) network create idmsvc_backend
 	$(CONTAINER_ENGINE) container inspect prometheus &> /dev/null || \
 	$(CONTAINER_ENGINE) run -d \
 	  --rm \
@@ -40,7 +41,9 @@ prometheus-up: ## Start prometheus service (local access at http://localhost:909
 	  --volume "$(PROMETHEUS_CONFIG):/etc/prometheus/prometheus.yml:ro,z" \
 	  --volume "prometheus:/prometheus:z" \
 	  --publish $(PROMETHEUS_UI_PORT):9090 \
+	  --network idmsvc_backend \
 	  quay.io/prometheus/prometheus:$(PROMETHEUS_VERSION)
+	@@echo "Prometheus is running at http://localhost:$(PROMETHEUS_UI_PORT)"
 
 .PHONY: prometheus-down
 prometheus-down:  ## Stop prometheus service
