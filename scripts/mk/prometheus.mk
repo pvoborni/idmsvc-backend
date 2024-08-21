@@ -13,7 +13,7 @@
 #   https://prometheus.io/docs/introduction/overview/
 ##
 
-PROMETHEUS_VERSION ?= v2.40.2
+PROMETHEUS_VERSION ?= v2.54.0
 PROMETHEUS_CONFIG ?= $(PROJECT_DIR)/configs/prometheus.yaml
 PROMETHEUS_UI_PORT ?= 9090
 export PROMETHEUS_UI_PORT
@@ -37,10 +37,10 @@ prometheus-up: ## Start prometheus service (local access at http://localhost:909
 	$(CONTAINER_ENGINE) run -d \
 	  --rm \
 	  --name prometheus \
-	  --network host \
 	  --volume "$(PROMETHEUS_CONFIG):/etc/prometheus/prometheus.yml:ro,z" \
 	  --volume "prometheus:/prometheus:z" \
-	  docker.io/prom/prometheus:$(PROMETHEUS_VERSION)
+	  --publish $(PROMETHEUS_UI_PORT):9090 \
+	  quay.io/prometheus/prometheus:$(PROMETHEUS_VERSION)
 
 .PHONY: prometheus-down
 prometheus-down:  ## Stop prometheus service
