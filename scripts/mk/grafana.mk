@@ -26,7 +26,7 @@ ifneq (,$(shell command -v xdg-open 2>/dev/null))
 OPEN ?= xdg-open
 endif
 ifeq (,$(OPEN))
-OPEN ?= falsea
+OPEN ?= false
 endif
 
 .PHONY: grafana-up
