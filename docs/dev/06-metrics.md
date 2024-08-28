@@ -11,7 +11,7 @@
 ## Prometheus locally
 
 - You can try your metrics with a local prometheus
-instance by running `make prometheus-up`.
+  instance by running `make prometheus-up`.
 - You can stop the prometheus instance by `make prometheus-stop` or clean it up by
   `make prometheus-clean`.
 - You can open the prometheus console by `make prometheus-ui`.
