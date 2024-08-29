@@ -15,8 +15,6 @@ const (
 type Metrics struct {
 	// HTTPRequestDuration is a histogram that measures the duration of HTTP requests
 	HTTPRequestDuration *prometheus.HistogramVec
-	// HttpRequestsTotal is a counter that measures the total number of HTTP requests
-	HTTPRequestsTotal *prometheus.CounterVec
 
 	reg *prometheus.Registry
 }
@@ -38,12 +36,6 @@ func NewMetrics(reg *prometheus.Registry) *Metrics {
 			Name:      "http_request_duration_seconds",
 			Help:      "Duration of HTTP requests",
 			Buckets:   prometheus.ExponentialBuckets(0.0005, 2, 20),
-		}, []string{"status", "method", "path"}),
-
-		HTTPRequestsTotal: promauto.With(reg).NewCounterVec(prometheus.CounterOpts{
-			Namespace: NameSpace,
-			Name:      "http_requests_total",
-			Help:      "Total number of HTTP requests",
 		}, []string{"status", "method", "path"}),
 	}
 

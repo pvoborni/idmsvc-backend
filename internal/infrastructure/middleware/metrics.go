@@ -21,23 +21,6 @@ var defaultConfig MetricsConfig = MetricsConfig{
 	Metrics: metrics.NewMetrics(prometheus.NewRegistry()),
 }
 
-func mapStatus(status int) string {
-	switch {
-	case status >= 100 && status < 200:
-		return "1xx"
-	case status >= 200 && status < 300:
-		return "2xx"
-	case status >= 300 && status < 400:
-		return "3xx"
-	case status >= 400 && status < 500:
-		return "4xx"
-	case status >= 500 && status < 600:
-		return "5xx"
-	default:
-		return ""
-	}
-}
-
 func MetricsMiddlewareWithConfig(config *MetricsConfig) echo.MiddlewareFunc {
 	if config == nil {
 		config = &defaultConfig
@@ -69,7 +52,6 @@ func MetricsMiddlewareWithConfig(config *MetricsConfig) echo.MiddlewareFunc {
 			statusStr := strconv.Itoa(status)
 
 			config.Metrics.HTTPRequestDuration.WithLabelValues(statusStr, method, path).Observe(time.Since(start).Seconds())
-			config.Metrics.HTTPRequestsTotal.WithLabelValues(statusStr, method, path).Inc()
 
 			return err
 		}
