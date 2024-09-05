@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/labstack/echo-contrib/pprof"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/podengo-project/idmsvc-backend/internal/handler"
@@ -20,6 +21,7 @@ type RouterConfig struct {
 	MetricsPath        string
 	IsFakeEnabled      bool
 	EnableAPIValidator bool
+	EnablePPROF        bool
 	Metrics            *metrics.Metrics
 }
 
@@ -112,6 +114,10 @@ func NewRouterWithConfig(e *echo.Echo, c RouterConfig) *echo.Echo {
 	newGroupPrivate(e.Group(c.PrivatePath), c)
 	newGroupPublic(e.Group(c.PublicPath+"/v"+c.Version), c)
 	newGroupPublic(e.Group(c.PublicPath+"/v"+getMajorVersion(c.Version)), c)
+	if c.EnablePPROF {
+		pprof.Register(e)
+	}
+
 	return e
 }
 

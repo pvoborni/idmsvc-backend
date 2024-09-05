@@ -195,6 +195,9 @@ type Application struct {
 	MainSecret string `mapstructure:"secret" validate:"required,base64rawurl" json:"-"`
 	// Flag to enable/disable rbac
 	EnableRBAC bool `mapstructure:"enable_rbac"`
+
+	// Debug flag to enable debug mode
+	Debug bool `mapstructure:"debug"`
 }
 
 var config *Config = nil

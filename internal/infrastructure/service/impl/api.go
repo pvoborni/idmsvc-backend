@@ -43,6 +43,7 @@ func NewApi(ctx context.Context, wg *sync.WaitGroup, cfg *config.Config, app han
 		Handlers:           app,
 		Metrics:            metrics,
 		EnableAPIValidator: cfg.Application.ValidateAPI,
+		EnablePPROF:        cfg.Application.Debug,
 	}
 	if cfg.Application.AcceptXRHFakeIdentity {
 		routerConfig.IsFakeEnabled = true

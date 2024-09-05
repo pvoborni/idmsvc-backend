@@ -235,6 +235,11 @@ parameters:
     value: "true"
     description: |
       It allows to enable / disable RBAC middleware.
+  - name: APP_DEBUG
+    value: "false"
+    description: |
+      It allows to enable / disable debug mode.
+      Enables pprof endpoints.
   - name: CLIENTS_RBAC_BASE_URL
     required: true
     description: |
