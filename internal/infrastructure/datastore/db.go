@@ -48,6 +48,12 @@ func NewDB(cfg *config.Config) (db *gorm.DB) {
 		slog.Error("Error creating database connector", slog.Any("error", err))
 		return nil
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		slog.Error("Error getting sql driver", slog.Any("error", err))
+		return nil
+	}
+	sqlDB.SetMaxOpenConns(20)
 	return db
 }
 
